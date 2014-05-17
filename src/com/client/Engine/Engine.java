@@ -1,6 +1,7 @@
 package com.client.Engine;
 
 import com.client.Handlers.ErrorHandler;
+import com.client.Handlers.ResourceLoadHandler;
 import com.client.Handlers.StateOutputHandler;
 import com.client.Screens.LoginScreen;
 
@@ -18,37 +19,33 @@ public class Engine implements Runnable{
 	public Engine(){
 		thread.start();
 		new LoginScreen(this);
+		ResourceLoadHandler resourceLoadHandler = new ResourceLoadHandler();
+		resourceLoadHandler.loadFiles();
 	}
 
 	// Starts/runs the engine
 	public void run(){
-
 		running = true;
-		long lastFrame = System.currentTimeMillis();
-		int frames = 0;
-		frames++;
+		while(running){
+			long lastFrame = System.currentTimeMillis();
+			int frames = 0;
+			frames++;
 
-		try{
-			Thread.sleep(2);
-
-			// Recursive method
-			if(running){
-				run();
-			}else{
-				System.exit(0);
+			try{
+				Thread.sleep(2);
+			}catch(InterruptedException e){
+				// Calls error handler for the error
+				ErrorHandler.handleError(e);
 			}
-		}catch(InterruptedException e){
 
-			// Calls error handler for the error
-			ErrorHandler.handleError(e);
+			// Fps manager
+			if(System.currentTimeMillis() - 1000 >= lastFrame){
+				fps = frames;
+				frames = 0;
+				lastFrame = System.currentTimeMillis();
+			}
 		}
-
-		// Fps manager
-		if(System.currentTimeMillis() - 1000 >= lastFrame){
-			fps = frames;
-			frames = 0;
-			lastFrame = System.currentTimeMillis();
-		}
+		
 	}
 
 }
