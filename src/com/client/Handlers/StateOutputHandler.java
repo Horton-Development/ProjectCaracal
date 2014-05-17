@@ -2,22 +2,15 @@ package com.client.Handlers;
 
 import com.client.Engine.Engine;
 
-public class StateOutputHandler {
+public class StateOutputHandler{
 
 	public StateOutputHandler(Engine engine){
-		
+
 	}
-	
-	//Returns the game fps
+
+	// Returns the game fps
 	public int getFPS(){
-		return Engine.fps; 
+		return Engine.fps;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
+
 }

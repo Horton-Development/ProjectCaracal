@@ -11,36 +11,36 @@ import javax.swing.JTextField;
 
 import com.client.Engine.Engine;
 
-
 public class LoginScreen extends Screen implements Runnable, ActionListener{
-	/* Screen used to take user input for login.
-	 * Should implement ConnectionHandler to initialise Connection with Server 
-	 * Use RequestHandler.sendData() to send data stream to server
-	 * Use ResponseHandler.waitForResponse() to wait for server response (success/failed login)
-	 * Proceed to menu screen
-	*/
-	
+	/*
+	 * Screen used to take user input for login. Should implement
+	 * ConnectionHandler to initialise Connection with Server Use
+	 * RequestHandler.sendData() to send data stream to server Use
+	 * ResponseHandler.waitForResponse() to wait for server response
+	 * (success/failed login) Proceed to menu screen
+	 */
+
 	private static final long serialVersionUID = 1L;
 
 	Thread thread = new Thread(this);
-	
-	//Java Components
+
+	// Java Components
 	JTextField textField = new JTextField(8);
 	JLabel usernameLabel = new JLabel("Username:");
 	JLabel passwordLabel = new JLabel("Password:");
 	JPasswordField passwordField = new JPasswordField(8);
 	JButton button = new JButton("Login");
-	
-	//Constructor
+
+	// Constructor
 	public LoginScreen(Engine engine){
 		super(engine);
 		thread.start();
 	}
-	
-	//Runs the login screen
-	public void run() {
-		
-		//If the engine is running
+
+	// Runs the login screen
+	public void run(){
+
+		// If the engine is running
 		if(engine.running){
 			button.addActionListener(this);
 			this.setLayout(new FlowLayout());
@@ -55,19 +55,15 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 			this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 			this.setVisible(true);
 		}else{
-			
+
 		}
 	}
 
-	//Action Listener
-	public void actionPerformed(ActionEvent e) {
-		
+	// Action Listener
+	public void actionPerformed(ActionEvent e){
+		if(e.getActionCommand().equals(button.getActionCommand())){
+			new LoadScreen(engine);
+		}
 	}
-	
-	
-	
-	
-	
-	
 
 }
