@@ -1,9 +1,5 @@
 package com.client.Engine;
 
-<<<<<<< HEAD
-public class Engine {
-
-=======
 import com.client.Handlers.ErrorHandler;
 import com.client.Handlers.StateOutputHandler;
 import com.client.Screens.LoginScreen;
@@ -59,5 +55,4 @@ public class Engine implements Runnable{
 	}
 	
 	
->>>>>>> 8463e4ffeec3430d32c8fe68fd2f18729d8a8994
 }

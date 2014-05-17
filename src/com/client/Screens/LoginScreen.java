@@ -1,9 +1,5 @@
 package com.client.Screens;
 
-<<<<<<< HEAD
-public class LoginScreen extends Screen {
-	
-=======
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,16 +13,12 @@ import com.client.Engine.Engine;
 
 
 public class LoginScreen extends Screen implements Runnable, ActionListener{
-
->>>>>>> 8463e4ffeec3430d32c8fe68fd2f18729d8a8994
 	/* Screen used to take user input for login.
 	 * Should implement ConnectionHandler to initialise Connection with Server 
 	 * Use RequestHandler.sendData() to send data stream to server
 	 * Use ResponseHandler.waitForResponse() to wait for server response (success/failed login)
 	 * Proceed to menu screen
 	*/
-<<<<<<< HEAD
-=======
 	
 	private static final long serialVersionUID = 1L;
 
@@ -77,6 +69,5 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 	
 	
 	
->>>>>>> 8463e4ffeec3430d32c8fe68fd2f18729d8a8994
 
 }

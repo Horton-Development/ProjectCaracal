@@ -1,10 +1,8 @@
 package com.client.Handlers;
 
 public class ErrorHandler {
-<<<<<<< HEAD
 	
 	//Exception handling, process exceptions and assemble string via StringWriter. Display to screen via OutputHandler
-=======
 
 	//Exception handling, process exceptions and assemble string via StringWriter. Display to screen via OutputHandler
 	
@@ -14,6 +12,5 @@ public class ErrorHandler {
 	}
 	
 	
->>>>>>> 8463e4ffeec3430d32c8fe68fd2f18729d8a8994
 
 }
