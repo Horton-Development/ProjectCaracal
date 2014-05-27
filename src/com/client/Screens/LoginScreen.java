@@ -10,6 +10,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import com.client.Engine.Engine;
+import com.client.Handlers.ConnectionHandler;
 
 public class LoginScreen extends Screen implements Runnable, ActionListener{
 	/*
@@ -23,6 +24,8 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 	private static final long serialVersionUID = 1L;
 
 	Thread thread = new Thread(this);
+	
+	ConnectionHandler connectionHandler = new ConnectionHandler();
 
 	// Java Components
 	JTextField textField = new JTextField(8);
@@ -62,7 +65,12 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 	// Action Listener
 	public void actionPerformed(ActionEvent e){
 		if(e.getActionCommand().equals(button.getActionCommand())){
-			new LoadScreen(engine);
+			connectionHandler.connectToServer();
+			if(connectionHandler.connected){
+				new LoadScreen(engine);
+			}else{
+				System.exit(0);
+			}
 		}
 	}
 
