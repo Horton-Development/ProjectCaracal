@@ -4,6 +4,8 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -34,6 +36,7 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 	JTextField textField = new JTextField(8);
 	JLabel usernameLabel = new JLabel("Username:");
 	JLabel passwordLabel = new JLabel("Password:");
+	JLabel invalidLabel = new JLabel("Invalid Password!");
 	JPasswordField passwordField = new JPasswordField(8);
 	JButton button = new JButton("Login");
 	String username;
@@ -75,7 +78,13 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 			password = passwordField.getPassword();
 			System.out.println("Username: " + username + " Password: " + String.valueOf(password));
 			if(connectionHandler.connected){
-				requestHandler.checkUserData(connectionHandler.getSocket(), username, password);
+				try{
+					requestHandler.checkUserData(new Socket("Localhost", 63450), username, password);
+				}catch(UnknownHostException e1){
+					e1.printStackTrace();
+				}catch(IOException e1){
+					e1.printStackTrace();
+				}
 			}else{
 				
 			}

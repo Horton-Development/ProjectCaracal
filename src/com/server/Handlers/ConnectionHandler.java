@@ -20,30 +20,43 @@ public class ConnectionHandler {
     public int clientID;
     String[] username;
     String[] password;
+    boolean running;
 
     ErrorHandler errorHandler = new ErrorHandler();
     
     //Starts the server connection
     public void createConnection(){
+    	ResponseHandler responseHandler = new ResponseHandler();
     	//States that the server is started
     	try{
     		System.out.println("Waiting for client connection...");
     		serverSocket = new ServerSocket(63450);
-    		clientSocket = serverSocket.accept();
-    		bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-    		while((inputLine = bufferedReader.readLine()) != null){
-    			System.out.println(inputLine);
+    		running = true;
+    		while(running){
+        		clientSocket = serverSocket.accept();
+        		bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+    			inputLine = bufferedReader.readLine();
     			if(inputLine.equalsIgnoreCase("Client")){
-					clientID = clientID + 1;
-					System.out.println("A new client has connected! Assigning client with id " + clientID);
-					checkForConnection();
-    			}else{
-    				checkForConnection();
-				}
-    			
-				
-				
-			}
+    				clientID = clientID + 1;
+    				System.out.println("A new client has connected! Assigning client id of " + clientID);
+    			}else if(inputLine.equalsIgnoreCase("Login")){
+    				System.out.println("Client " + clientID + " is calling for a login request.");
+    				inputLine = bufferedReader.readLine();
+    				username = inputLine.split("-");
+    				if(responseHandler.checkUsername(username[0])){
+    					if(responseHandler.getUserPassword(username[0]).equals(username[1])){
+    						PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
+    						writer.println("Valid");
+    					}else{
+    						PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
+    						writer.println("Invalid");
+    					}
+    				}else{
+    					PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
+						writer.println("Invalid");
+    				}
+    			}
+    		}
     		
     	}catch(IOException e){
              e.printStackTrace();
@@ -54,33 +67,8 @@ public class ConnectionHandler {
     
     //Checks for a client connection
     public void checkForConnection(){
-    	System.out.println("test");
-    	try{
-    		System.out.println("test2");
-			while((inputLine = bufferedReader.readLine()) != null){
-				if(inputLine.equalsIgnoreCase("Login")){
-					System.out.println("Requesting a login check.");
-					while((inputLine = bufferedReader.readLine()) != null){
-						System.out.println(inputLine);
-						ResponseHandler responseHandler = new ResponseHandler();
-						username = inputLine.split("Username: ");
-						password = inputLine.split("Password: ");
-						PrintWriter printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
-						if(responseHandler.checkUsername(username[1])){
-							if(responseHandler.getUserPassword(username[1]).equals(inputLine)){
-								printWriter.println("Valid");
-							}else{
-								printWriter.println("Invalid");
-							}
-						}
-					}
-					
-				}
-			}
-		}catch(IOException e){
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    	
+		
 	}
     
     
