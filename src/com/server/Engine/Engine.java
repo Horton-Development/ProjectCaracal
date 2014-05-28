@@ -2,6 +2,7 @@ package com.server.Engine;
 
 import com.server.Handlers.ConfigHandler;
 import com.server.Handlers.ConnectionHandler;
+import com.server.Handlers.ResponseHandler;
 
 public class Engine implements Runnable {
 	
@@ -11,7 +12,7 @@ public class Engine implements Runnable {
 	public boolean running = false;
 	public int clientID;
 	ConfigHandler configHandler = new ConfigHandler();
-	
+	ResponseHandler responseHandler = new ResponseHandler();
 	ConnectionHandler connectionHandler = new ConnectionHandler();
 	
 	public Engine(){

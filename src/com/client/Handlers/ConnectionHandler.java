@@ -1,7 +1,9 @@
 package com.client.Handlers;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class ConnectionHandler{
 
@@ -25,5 +27,30 @@ public class ConnectionHandler{
 			connected = false;
 		}
 	}
+	
+	//Checks if connected
+	public boolean isConnected(){
+		if(connected){
+			return connected;
+		}else{
+			return connected;
+		}
+	}
+	
+	public Socket getSocket(){
+		try{
+			socket = new Socket("localhost", 63450);
+			return socket;
+		}catch(UnknownHostException e){
+			e.printStackTrace();
+			return socket;
+		}catch(IOException e){
+			e.printStackTrace();
+			return socket;
+		}
+		
+	}
+	
+	
 
 }

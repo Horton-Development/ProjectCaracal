@@ -3,6 +3,7 @@ package com.client.Screens;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -11,6 +12,7 @@ import javax.swing.JTextField;
 
 import com.client.Engine.Engine;
 import com.client.Handlers.ConnectionHandler;
+import com.client.Handlers.RequestHandler;
 
 public class LoginScreen extends Screen implements Runnable, ActionListener{
 	/*
@@ -25,6 +27,7 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 
 	Thread thread = new Thread(this);
 	
+	RequestHandler requestHandler = new RequestHandler(engine);
 	ConnectionHandler connectionHandler = new ConnectionHandler();
 
 	// Java Components
@@ -33,6 +36,8 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 	JLabel passwordLabel = new JLabel("Password:");
 	JPasswordField passwordField = new JPasswordField(8);
 	JButton button = new JButton("Login");
+	String username;
+	char[] password;
 
 	// Constructor
 	public LoginScreen(Engine engine){
@@ -57,6 +62,7 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 			this.setResizable(false);
 			this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 			this.setVisible(true);
+			connectionHandler.connectToServer();
 		}else{
 
 		}
@@ -65,11 +71,13 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 	// Action Listener
 	public void actionPerformed(ActionEvent e){
 		if(e.getActionCommand().equals(button.getActionCommand())){
-			connectionHandler.connectToServer();
+			username = textField.getText();
+			password = passwordField.getPassword();
+			System.out.println("Username: " + username + " Password: " + String.valueOf(password));
 			if(connectionHandler.connected){
-				new LoadScreen(engine);
+				requestHandler.checkUserData(connectionHandler.getSocket(), username, password);
 			}else{
-				System.exit(0);
+				
 			}
 		}
 	}
