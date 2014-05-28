@@ -12,6 +12,8 @@ public class ResponseHandler{
 	public String getUserPassword(String username){
 		File userData = new File("Settings//" + username + ".yml");
 		String password = null;
+		
+		//Checks the username.
 		if(checkUsername(username)){
 			try{
 				BufferedReader reader = new BufferedReader(new FileReader(userData));
@@ -32,6 +34,8 @@ public class ResponseHandler{
 	// Checks if the user exists.
 	public boolean checkUsername(String username){
 		File userData = new File("Settings//" + username + ".yml");
+		
+		//If the players file exists.
 		if(!userData.exists()){
 			return false;
 		}else{

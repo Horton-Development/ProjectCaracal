@@ -73,10 +73,13 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 
 	// Action Listener
 	public void actionPerformed(ActionEvent e){
+		
+		//If the action performed was the clicking of the button
 		if(e.getActionCommand().equals(button.getActionCommand())){
 			username = textField.getText();
 			password = passwordField.getPassword();
-			System.out.println("Username: " + username + " Password: " + String.valueOf(password));
+			
+			//If they are connected to the server.
 			if(connectionHandler.connected){
 				try{
 					requestHandler.checkUserData(new Socket("Localhost", 63450), username, password);
@@ -86,7 +89,7 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 					e1.printStackTrace();
 				}
 			}else{
-				
+				System.out.println("Could not make a connection to the server.");
 			}
 		}
 	}
