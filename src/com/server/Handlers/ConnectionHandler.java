@@ -45,28 +45,28 @@ public class ConnectionHandler {
     			
     			//If the message was a login event.
     			else if(inputLine.equalsIgnoreCase("Login")){
-    				System.out.println("Client " + clientID + " is calling for a login request.");
     				inputLine = bufferedReader.readLine();
     				username = inputLine.split("-");
-    				
+    				System.out.println("Client " + clientID + " is calling for a login request.");
     				//Checks if the username is valid.
-    				if(responseHandler.checkUsername(username[0])){
-    					
-    					//Checks if the password is valid.
-    					if(responseHandler.getUserPassword(username[0]).equals(username[1])){
-    						PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
-    						writer.println("Valid");
-    						System.out.println(username[0] + " has logged in!");
-    					}else{
-    						PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
-    						writer.println("Invalid");
-    						System.out.println("Client " + clientID + " tried logging in but failed due to wrong credentials.");
-    					}
-    				}else{
-    					PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
-						writer.println("Invalid");
-						System.out.println("Client " + clientID + " tried logging in but failed due to wrong credentials.");
+        			if(responseHandler.checkUsername(username[0])){
+        				
+        				//Checks if the password is valid.
+        				if(responseHandler.getUserPassword(username[0]).equals(username[1])){
+        					PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
+        					writer.println("Valid");
+        					System.out.println(username[0] + " has logged in!");
+        				}else{
+        					PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
+        					writer.println("Invalid");
+        					System.out.println("Client " + clientID + " tried logging in but failed due to wrong credentials.");
+        				}
+        			}else{
+        				PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
+    					writer.println("Invalid");
+    					System.out.println("Client " + clientID + " tried logging in but failed due to wrong credentials.");
     				}
+    				
     			}
     		}
     		

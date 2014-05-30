@@ -36,23 +36,29 @@ public class RequestHandler implements Runnable{
 	
 	public void checkUserData(Socket clientSocket, String username, char[] password){
 		if(connectionHandler.isConnected()){
-			try{
-				printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
-				bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-				printWriter.println("Login");
-				sendCredentials(clientSocket, username, password);
-				thread.start();
-						
-			
-			}catch(IOException e){
-				e.printStackTrace();
+			if(username.isEmpty() || String.valueOf(password).isEmpty()){
+				
+			}else{
+				try{
+					printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
+					bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+					printWriter.println("Login");
+					sendCredentials(clientSocket, username, password);
+					thread.start();
+							
+				
+				}catch(IOException e){
+					e.printStackTrace();
+				}
 			}
+			
 		}
 	}
 
 	
 	
 	public void run(){
+		interval = 0;
 		System.out.println("Waiting for server response!");
 		try{
 			System.out.println(interval);
@@ -72,6 +78,7 @@ public class RequestHandler implements Runnable{
 					thread.sleep(200);
 				}catch(InterruptedException e){
 					e.printStackTrace();
+					interval = 11;
 				}
 				
 					
