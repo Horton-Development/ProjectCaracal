@@ -8,6 +8,7 @@ import java.net.Socket;
 
 import com.client.Engine.Engine;
 import com.client.Screens.LoadScreen;
+import com.client.Screens.LoginScreen;
 import com.server.Handlers.ResponseHandler;
 
 public class RequestHandler implements Runnable{
@@ -28,10 +29,12 @@ public class RequestHandler implements Runnable{
 	
 	ConnectionHandler connectionHandler = new ConnectionHandler();
 	ResponseHandler responseHandler = new ResponseHandler();
+	LoginScreen loginScreen;
 	
 	Engine engine;
-	public RequestHandler(Engine engine){
+	public RequestHandler(Engine engine, LoginScreen loginScreen){
 		this.engine = engine;
+		this.loginScreen = loginScreen;
 	}
 	
 	public void checkUserData(Socket clientSocket, String username, char[] password){
@@ -68,6 +71,7 @@ public class RequestHandler implements Runnable{
 				try{
 					if(inputline.equalsIgnoreCase("Valid")){
 						System.out.println("Valid");
+						loginScreen.shutdown();
 						new LoadScreen(engine);
 						interval = 11;
 					}else if(inputline.equalsIgnoreCase("Invalid")){

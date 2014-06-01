@@ -15,7 +15,7 @@ public class ConnectionHandler{
 	
 	public void connectToServer(){
 		try{
-			socket = new Socket("Localhost", 63450);
+			socket = new Socket("72.231.199.200", 63450);
 			printWriter = new PrintWriter(socket.getOutputStream(), true);
 			printWriter.println("Client");
 			System.out.println("Connected to the server.");

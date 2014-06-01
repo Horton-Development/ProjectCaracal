@@ -1,4 +1,3 @@
-
 package com.server.Handlers;
 
 import java.io.BufferedReader;
@@ -11,8 +10,8 @@ import java.net.Socket;
 
 public class ConnectionHandler {
     
-	
-	
+
+
     private static ServerSocket serverSocket;
     private static Socket clientSocket;
     private static BufferedReader bufferedReader;
@@ -80,7 +79,7 @@ public class ConnectionHandler {
     //Checks for a client connection
     public void checkForConnection(){
     	
-		
+
 	}
     
     
@@ -92,7 +91,7 @@ public class ConnectionHandler {
             try {
                 serverSocket.close();
             }catch(IOException e){
-                ErrorHandler.handleError(e);
+            	
             }
         }else{
             System.out.println("Error: Connection is already closed.");

@@ -29,7 +29,7 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 
 	Thread thread = new Thread(this);
 	
-	RequestHandler requestHandler = new RequestHandler(engine);
+	RequestHandler requestHandler = new RequestHandler(engine, this);
 	ConnectionHandler connectionHandler = new ConnectionHandler();
 
 	// Java Components
@@ -63,7 +63,7 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 			this.setSize(400, 110);
 			this.setTitle("ProjectCaracal");
 			this.setResizable(false);
-			this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+			this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 			this.setVisible(true);
 			connectionHandler.connectToServer();
 		}else{
@@ -82,7 +82,7 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 			//If they are connected to the server.
 			if(connectionHandler.connected){
 				try{
-					requestHandler.checkUserData(new Socket("Localhost", 63450), username, password);
+					requestHandler.checkUserData(new Socket("72.231.199.200", 63450), username, password);
 				}catch(UnknownHostException e1){
 					e1.printStackTrace();
 				}catch(IOException e1){
@@ -92,6 +92,10 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 				System.out.println("Could not make a connection to the server.");
 			}
 		}
+	}
+	
+	public void shutdown(){
+		this.dispose();
 	}
 
 }
