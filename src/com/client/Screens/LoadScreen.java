@@ -1,6 +1,9 @@
 package com.client.Screens;
 
+import java.awt.FlowLayout;
+
 import javax.swing.JFrame;
+import javax.swing.JProgressBar;
 
 import com.client.Engine.Engine;
 import com.client.Handlers.DimensionHandler;
@@ -12,6 +15,11 @@ public class LoadScreen extends Screen implements Runnable{
 	Screen screen = new Screen(engine);
 	Thread thread = new Thread(this);
 	DimensionHandler dimensionHandler = new DimensionHandler(screen);
+	int value = 0;
+	
+	MenuScreen menuScreen;
+	
+	JProgressBar progressBar = new JProgressBar();
 
 	private static final long serialVersionUID = 1L;
 
@@ -26,11 +34,36 @@ public class LoadScreen extends Screen implements Runnable{
 		new JFrame();
 		this.setResizable(false);
 		this.setTitle("ProjectCaracal");
+		this.setLayout(new FlowLayout());
+		this.add(progressBar);
 		setSize();
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
+		setProgress();
 	}
 	
+	
+	private void setProgress(){
+		progressBar.setMaximum(19);
+		for(int interval = 0; interval < 20; interval ++){
+			try{
+				thread.sleep(200);
+				value = interval;
+				System.out.println(value);
+				progressBar.setValue(value);
+				if(interval == 19){
+					progressBar.setVisible(false);
+					this.add(new MenuScreen(progressBar));
+				}
+			}catch(InterruptedException e){
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	
+	//Sets the size of the screen.
 	public void setSize(){
 		if(dimensionHandler.determineResolution(this.getWidth(), this.getHeight()).equals(ResolutionHandler.SMALL)){
 			this.setSize(ResolutionHandler.SMALL.getWidth(), ResolutionHandler.SMALL.getHeight());

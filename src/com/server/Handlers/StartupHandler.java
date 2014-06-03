@@ -49,12 +49,12 @@ public class StartupHandler extends JFrame implements ActionListener{
         stopButton.setEnabled(false);
     }
 
-    
+    //When an action is performed
 	public void actionPerformed(ActionEvent e){
 		if(e.getActionCommand().equalsIgnoreCase("Start")){
 			stopButton.setEnabled(true);
 			startButton.setEnabled(false);
-			new Engine();
+			new Engine(this);
 		}
 		else if(e.getActionCommand().equalsIgnoreCase("Stop")){
 			startButton.setEnabled(true);

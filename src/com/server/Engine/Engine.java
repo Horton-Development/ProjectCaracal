@@ -3,6 +3,7 @@ package com.server.Engine;
 import com.server.Handlers.ConfigHandler;
 import com.server.Handlers.ConnectionHandler;
 import com.server.Handlers.ResponseHandler;
+import com.server.Handlers.StartupHandler;
 
 public class Engine implements Runnable {
 	
@@ -14,8 +15,10 @@ public class Engine implements Runnable {
 	ConfigHandler configHandler = new ConfigHandler();
 	ResponseHandler responseHandler = new ResponseHandler();
 	ConnectionHandler connectionHandler = new ConnectionHandler();
+	StartupHandler startupHandler;
 	
-	public Engine(){
+	public Engine(StartupHandler startupHandler){
+		this.startupHandler = startupHandler;
 		configHandler.createDefaultDirectory();
 		System.out.println("Server Started!");
 		thread.start();
@@ -23,7 +26,7 @@ public class Engine implements Runnable {
 
 	
 	public void run(){
-		connectionHandler.createConnection();
+		connectionHandler.createConnection(startupHandler);
 	}
 
 

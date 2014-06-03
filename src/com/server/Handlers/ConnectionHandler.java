@@ -24,18 +24,19 @@ public class ConnectionHandler {
     ErrorHandler errorHandler = new ErrorHandler();
     
     //Starts the server connection
-    public void createConnection(){
+    public void createConnection(StartupHandler startupHandler){
     	ResponseHandler responseHandler = new ResponseHandler();
     	//States that the server is started
     	try{
     		System.out.println("Waiting for client connection...");
     		serverSocket = new ServerSocket(63450);
     		running = true;
+    		
     		while(running){
         		clientSocket = serverSocket.accept();
         		bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     			inputLine = bufferedReader.readLine();
-    			
+    			startupHandler.textArea.setText(inputLine);
     			//If the message was client.
     			if(inputLine.equalsIgnoreCase("Client")){
     				clientID = clientID + 1;
