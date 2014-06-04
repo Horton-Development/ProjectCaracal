@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Date;
 
 
 public class ConnectionHandler {
@@ -28,19 +29,22 @@ public class ConnectionHandler {
     	ResponseHandler responseHandler = new ResponseHandler();
     	//States that the server is started
     	try{
+    		Date date = new Date();
     		System.out.println("Waiting for client connection...");
+    		startupHandler.textArea.append("(" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ") Waiting for client connection...\n");
     		serverSocket = new ServerSocket(63450);
     		running = true;
     		
     		while(running){
         		clientSocket = serverSocket.accept();
+        		Date date2 = new Date();
         		bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
     			inputLine = bufferedReader.readLine();
-    			startupHandler.textArea.setText(inputLine);
     			//If the message was client.
     			if(inputLine.equalsIgnoreCase("Client")){
     				clientID = clientID + 1;
-    				System.out.println("A new client has connected! Assigning client id of " + clientID);
+    				System.out.println("A new client has connected! Assigning client id of " + clientID + ".");
+    				startupHandler.textArea.append("(" + date2.getHours() + ":" + date2.getMinutes() + ":" + date2.getSeconds() + ") A new client has connected! Assigning client id of " + clientID + ".\n");
     			}
     			
     			//If the message was a login event.
@@ -48,6 +52,7 @@ public class ConnectionHandler {
     				inputLine = bufferedReader.readLine();
     				username = inputLine.split("-");
     				System.out.println("Client " + clientID + " is calling for a login request.");
+    				startupHandler.textArea.append("(" + date2.getHours() + ":" + date2.getMinutes() + ":" + date2.getSeconds() + ") Client " + clientID + " is calling for a login request.\n");
     				//Checks if the username is valid.
         			if(responseHandler.checkUsername(username[0])){
         				
@@ -56,15 +61,19 @@ public class ConnectionHandler {
         					PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
         					writer.println("Valid");
         					System.out.println(username[0] + " has logged in!");
+        					startupHandler.textArea.append("(" + date2.getHours() + ":" + date2.getMinutes() + ":" + date2.getSeconds() + ") " + username[0] + " has logged in!\n");
+        					
         				}else{
         					PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
         					writer.println("Invalid");
         					System.out.println("Client " + clientID + " tried logging in but failed due to wrong credentials.");
+        					startupHandler.textArea.append("(" + date2.getHours() + ":" + date2.getMinutes() + ":" + date2.getSeconds() + ") Client " + clientID + " tried logging in but failed due to wrong credentials.\n");
         				}
         			}else{
         				PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
     					writer.println("Invalid");
     					System.out.println("Client " + clientID + " tried logging in but failed due to wrong credentials.");
+    					startupHandler.textArea.append("(" + date2.getHours() + ":" + date2.getMinutes() + ":" + date2.getSeconds() + ") Client " + clientID + " tried logging in but failed due to wrong credentials.\n");
     				}
     				
     			}
@@ -85,12 +94,13 @@ public class ConnectionHandler {
     
     
     //Ends the connection
-    public void endConnection(){
-        
+    public void endConnection(StartupHandler startupHandler){
+    	Date date = new Date();
     	//Checks if the server connection is closed
         if(!serverSocket.isClosed()){
             try {
                 serverSocket.close();
+                startupHandler.textArea.append("(" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ") Server shut down...\n");
             }catch(IOException e){
             	
             }

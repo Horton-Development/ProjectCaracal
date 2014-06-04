@@ -1,14 +1,15 @@
 
 package com.server.Handlers;
 
+import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 
 import com.server.Engine.Engine;
 
@@ -33,6 +34,10 @@ public class StartupHandler extends JFrame implements ActionListener{
     //Sets the frame size and starts a connection
     public StartupHandler(){
     	textArea.setEditable(false);
+    	textArea.setColumns(1);
+    	textArea.setRows(20);
+    	textArea.setFont(new Font("Arial", Font.PLAIN, 18));
+    	textArea.setAutoscrolls(true);
     	startButton.addActionListener(this);
         startButton.setActionCommand("Start");
         stopButton.addActionListener(this);
@@ -40,10 +45,10 @@ public class StartupHandler extends JFrame implements ActionListener{
     	this.setSize(800, 500);
         this.setTitle("ProjectCaracal (Server)");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setLayout(new FlowLayout());
-        this.add(startButton);
-        this.add(stopButton);
-        this.add(textArea);
+        this.setLayout(new BorderLayout());
+        this.add(startButton, BorderLayout.PAGE_START);
+        this.add(stopButton, BorderLayout.PAGE_END);
+        this.add(textArea, BorderLayout.CENTER);
         this.setVisible(true);
         this.setResizable(false);
         stopButton.setEnabled(false);
@@ -59,7 +64,7 @@ public class StartupHandler extends JFrame implements ActionListener{
 		else if(e.getActionCommand().equalsIgnoreCase("Stop")){
 			startButton.setEnabled(true);
 			stopButton.setEnabled(false);
-			connectionHandler.endConnection();
+			connectionHandler.endConnection(this);
 		}
 	}
     

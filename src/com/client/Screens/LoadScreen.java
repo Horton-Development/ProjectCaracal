@@ -53,7 +53,7 @@ public class LoadScreen extends Screen implements Runnable{
 				progressBar.setValue(value);
 				if(interval == 19){
 					progressBar.setVisible(false);
-					this.add(new MenuScreen(progressBar));
+					new MenuScreen(progressBar);
 				}
 			}catch(InterruptedException e){
 				e.printStackTrace();
