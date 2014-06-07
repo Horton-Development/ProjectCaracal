@@ -20,6 +20,7 @@ public class ConnectionHandler {
 	public ServerSocket serverSocket;
 	public Socket clientSocket;
 	private BufferedReader bufferedReader;
+	private int serverClientID = 0;
 	private int clientID = 0;
 	
 	String inputLine;
@@ -55,11 +56,13 @@ public class ConnectionHandler {
 					//If the input line is case Client.
 					case "CLIENT":
 						startupHandler.textArea.append("(" + format.format(date) + ") A new client has connected! Assigning client id of " + clientID + ".\n");
+						serverClientID = clientID;
+						clientID++;
 						break;
 						
 					//If the input line is case Login.	
 					case "LOGIN":
-						startupHandler.textArea.append("(" + format.format(date) + ") Client " + clientID + " is requesting a login.\n");
+						startupHandler.textArea.append("(" + format.format(date) + ") Client " + serverClientID + " is requesting a login.\n");
 						String[] parts = inputLine.split("~");
 						new UserProfile(parts[0], parts[1], clientID);
 						
@@ -69,13 +72,13 @@ public class ConnectionHandler {
 							//Checks the password.
 							if(responseHandler.getUserPassword(parts[0]).equals(parts[1])){
 								sendValidMessage(clientSocket);
-								startupHandler.textArea.append("(" + format.format(date) + ") Client " + clientID + " has logged in as " + parts[0] + "!\n");
+								startupHandler.textArea.append("(" + format.format(date) + ") Client " + serverClientID + " has logged in as " + parts[0] + "!\n");
 							}else{
-								startupHandler.textArea.append("(" + format.format(date) + ") Client " + clientID + " typed in the wrong credentials!\n");
+								startupHandler.textArea.append("(" + format.format(date) + ") Client " + serverClientID + " typed in the wrong credentials!\n");
 								sendInvalidMessage(clientSocket);
 							}
 						}else{
-							startupHandler.textArea.append(format.format(date) + ") Client " + clientID + " typed in the wrong credentials!\n");
+							startupHandler.textArea.append(format.format(date) + ") Client " + serverClientID + " typed in the wrong credentials!\n");
 							sendInvalidMessage(clientSocket);
 						}
 				}
@@ -109,8 +112,9 @@ public class ConnectionHandler {
 	
 
 	//Ends the socket connection
-	public void endConnection(ServerSocket socket){
+	public void endConnection(ServerSocket socket, Socket clientSocket){
 		try{
+			clientSocket.close();
 			socket.close();
 		}catch(IOException e){
 			e.printStackTrace();

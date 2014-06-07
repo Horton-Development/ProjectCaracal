@@ -48,7 +48,7 @@ public class StartupHandler extends JFrame implements ActionListener{
 		else if(e.getActionCommand().equalsIgnoreCase("Stop")){
 			startButton.setEnabled(true);
 			stopButton.setEnabled(false);
-			connectionHandler.endConnection(connectionHandler.serverSocket);
+			connectionHandler.endConnection(connectionHandler.serverSocket, connectionHandler.clientSocket);
 		}
 	}
 	
