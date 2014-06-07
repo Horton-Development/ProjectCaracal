@@ -6,107 +6,117 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.common.utils.BCrypt;
+import com.common.utils.UserProfile;
+
 
 
 public class ConnectionHandler {
     
-
-
-    private static ServerSocket serverSocket;
-    private static Socket clientSocket;
-    private static BufferedReader bufferedReader;
-    private static String inputLine;
-    public int clientID;
-    String[] username;
-    String[] password;
-    boolean running;
-
-    ErrorHandler errorHandler = new ErrorHandler();
-    
-    //Starts the server connection
-    public void createConnection(StartupHandler startupHandler){
-    	ResponseHandler responseHandler = new ResponseHandler();
-    	//States that the server is started
-    	try{
-    		Date date = new Date();
-    		System.out.println("Waiting for client connection...");
-    		startupHandler.textArea.append("(" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ") Waiting for client connection...\n");
-    		serverSocket = new ServerSocket(63450);
-    		running = true;
-    		
-    		while(running){
-        		clientSocket = serverSocket.accept();
-        		Date date2 = new Date();
-        		bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-    			inputLine = bufferedReader.readLine();
-    			//If the message was client.
-    			if(inputLine.equalsIgnoreCase("Client")){
-    				clientID = clientID + 1;
-    				System.out.println("A new client has connected! Assigning client id of " + clientID + ".");
-    				startupHandler.textArea.append("(" + date2.getHours() + ":" + date2.getMinutes() + ":" + date2.getSeconds() + ") A new client has connected! Assigning client id of " + clientID + ".\n");
-    			}
-    			
-    			//If the message was a login event.
-    			else if(inputLine.equalsIgnoreCase("Login")){
-    				inputLine = bufferedReader.readLine();
-    				username = inputLine.split("-");
-    				System.out.println("Client " + clientID + " is calling for a login request.");
-    				startupHandler.textArea.append("(" + date2.getHours() + ":" + date2.getMinutes() + ":" + date2.getSeconds() + ") Client " + clientID + " is calling for a login request.\n");
-    				//Checks if the username is valid.
-        			if(responseHandler.checkUsername(username[0])){
-        				
-        				//Checks if the password is valid.
-        				if(responseHandler.getUserPassword(username[0]).equals(username[1])){
-        					PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
-        					writer.println("Valid");
-        					System.out.println(username[0] + " has logged in!");
-        					startupHandler.textArea.append("(" + date2.getHours() + ":" + date2.getMinutes() + ":" + date2.getSeconds() + ") " + username[0] + " has logged in!\n");
-        					
-        				}else{
-        					PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
-        					writer.println("Invalid");
-        					System.out.println("Client " + clientID + " tried logging in but failed due to wrong credentials.");
-        					startupHandler.textArea.append("(" + date2.getHours() + ":" + date2.getMinutes() + ":" + date2.getSeconds() + ") Client " + clientID + " tried logging in but failed due to wrong credentials.\n");
-        				}
-        			}else{
-        				PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
-    					writer.println("Invalid");
-    					System.out.println("Client " + clientID + " tried logging in but failed due to wrong credentials.");
-    					startupHandler.textArea.append("(" + date2.getHours() + ":" + date2.getMinutes() + ":" + date2.getSeconds() + ") Client " + clientID + " tried logging in but failed due to wrong credentials.\n");
-    				}
-    				
-    			}
-    		}
-    		
-    	}catch(IOException e){
-             e.printStackTrace();
-    	}
-        
-        
-    }
-    
-    //Checks for a client connection
-    public void checkForConnection(){
-    	
-
+	public ServerSocket serverSocket;
+	public Socket clientSocket;
+	private BufferedReader bufferedReader;
+	private int clientID = 0;
+	
+	String inputLine;
+	boolean running;
+	
+	UserProfile userProfile;
+	
+	//Constructor
+	public ConnectionHandler(){
+		
 	}
-    
-    
-    //Ends the connection
-    public void endConnection(StartupHandler startupHandler){
-    	Date date = new Date();
-    	//Checks if the server connection is closed
-        if(!serverSocket.isClosed()){
-            try {
-                serverSocket.close();
-                startupHandler.textArea.append("(" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + ") Server shut down...\n");
-            }catch(IOException e){
-            	
-            }
-        }else{
-            System.out.println("Error: Connection is already closed.");
-        }
-    }
+	
+	//Creates a socket connection
+	public void createConnection(StartupHandler startupHandler){
+		Date date2 = new Date(System.currentTimeMillis());
+		SimpleDateFormat format2 = new SimpleDateFormat("EEE, HH:mm:ss a");
+		startupHandler.textArea.append("(" + format2.format(date2) + ") Server started!\n(" + format2.format(date2) + ") Waiting for connection...\n");
+		ResponseHandler responseHandler = new ResponseHandler();
+		BCrypt bCrypt = new BCrypt();
+		try{
+			serverSocket = new ServerSocket(63450);
+			running = true;
+			while(running){
+				clientSocket = serverSocket.accept();
+				Date date = new Date(System.currentTimeMillis());
+				SimpleDateFormat format = new SimpleDateFormat("EEE, HH:mm:ss a");
+				bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+				inputLine = bufferedReader.readLine();
+				
+				//Checks the input line.
+				switch(inputLine){
+					
+					//If the input line is case Client.
+					case "CLIENT":
+						startupHandler.textArea.append("(" + format.format(date) + ") A new client has connected! Assigning client id of " + clientID + ".\n");
+						break;
+						
+					//If the input line is case Login.	
+					case "LOGIN":
+						startupHandler.textArea.append("(" + format.format(date) + ") Client " + clientID + " is requesting a login.\n");
+						String[] parts = inputLine.split("~");
+						new UserProfile(parts[0], parts[1], clientID);
+						
+						//Checks the username.
+						if(responseHandler.checkUsername(parts[0])){
+							
+							//Checks the password.
+							if(responseHandler.getUserPassword(parts[0]).equals(parts[1])){
+								sendValidMessage(clientSocket);
+								startupHandler.textArea.append("(" + format.format(date) + ") Client " + clientID + " has logged in as " + parts[0] + "!\n");
+							}else{
+								startupHandler.textArea.append("(" + format.format(date) + ") Client " + clientID + " typed in the wrong credentials!\n");
+								sendInvalidMessage(clientSocket);
+							}
+						}else{
+							startupHandler.textArea.append(format.format(date) + ") Client " + clientID + " typed in the wrong credentials!\n");
+							sendInvalidMessage(clientSocket);
+						}
+				}
+			}
+		}catch(UnknownHostException e){
+			e.printStackTrace();
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+	
+	//Sends a message stating the password is invalid.
+	private void sendInvalidMessage(Socket clientSocket2){
+		try{
+			PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
+			writer.println("Invalid");
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+
+	//Sends a message stating the password is valid.
+	private void sendValidMessage(Socket clientSocket){
+		try{
+			PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
+			writer.println("Valid");
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+	
+
+	//Ends the socket connection
+	public void endConnection(ServerSocket socket){
+		try{
+			socket.close();
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+	
+	
     
 }

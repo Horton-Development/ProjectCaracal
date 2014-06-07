@@ -10,14 +10,14 @@ public class ConnectionHandler{
 
 	private static Socket socket;
 	private static PrintWriter printWriter;
-	public boolean connected = false;
-
+	public boolean connected;
+	
 	
 	public void connectToServer(){
 		try{
-			socket = new Socket("72.231.199.200", 63450);
+			socket = new Socket("localhost", 63450);
 			printWriter = new PrintWriter(socket.getOutputStream(), true);
-			printWriter.println("Client");
+			printWriter.println("CLIENT");
 			System.out.println("Connected to the server.");
 			connected = true;
 		}catch(Exception e){
@@ -26,10 +26,6 @@ public class ConnectionHandler{
 		}
 	}
 	
-	//Checks if connected
-	public boolean isConnected(){
-		return true;
-	}
 	
 	public Socket getSocket(){
 		return socket;

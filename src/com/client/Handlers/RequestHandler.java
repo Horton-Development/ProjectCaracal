@@ -9,6 +9,7 @@ import java.net.Socket;
 import com.client.Engine.Engine;
 import com.client.Screens.LoadScreen;
 import com.client.Screens.LoginScreen;
+import com.common.utils.BCrypt;
 import com.server.Handlers.ResponseHandler;
 
 public class RequestHandler implements Runnable{
@@ -29,6 +30,7 @@ public class RequestHandler implements Runnable{
 	
 	ConnectionHandler connectionHandler = new ConnectionHandler();
 	ResponseHandler responseHandler = new ResponseHandler();
+	BCrypt bCrypt = new BCrypt();
 	LoginScreen loginScreen;
 	
 	Engine engine;
@@ -38,21 +40,18 @@ public class RequestHandler implements Runnable{
 	}
 	
 	public void checkUserData(Socket clientSocket, String username, char[] password){
-		if(connectionHandler.isConnected()){
-			if(username.isEmpty() || String.valueOf(password).isEmpty()){
+		if(username.isEmpty() || String.valueOf(password).isEmpty()){
+			
+		}else{
+			try{
+				printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
+				bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				
-			}else{
-				try{
-					printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
-					bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-					printWriter.println("Login");
-					sendCredentials(clientSocket, username, password);
-					thread.start();
-							
-				
-				}catch(IOException e){
-					e.printStackTrace();
-				}
+				printWriter.println("LOGIN");
+				sendCredentials(clientSocket, username, password);
+				thread.start();
+			}catch(IOException e){
+				e.printStackTrace();
 			}
 			
 		}
@@ -96,7 +95,7 @@ public class RequestHandler implements Runnable{
 	public void sendCredentials(Socket clientSocket, String username2, char[] password2){
 		try{
 			printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
-			printWriter.println( username2 + "-" + String.valueOf(password2));
+			printWriter.println(username2 + "~" + bCrypt.hashpw(String.valueOf(password2), bCrypt.gensalt()));
 		}catch(IOException e){
 			e.printStackTrace();
 		}

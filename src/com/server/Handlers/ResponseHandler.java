@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 
 public class ResponseHandler{
 
@@ -31,6 +32,8 @@ public class ResponseHandler{
 		return null;
 	}
 
+	
+	
 	// Checks if the user exists.
 	public boolean checkUsername(String username){
 		File userData = new File("Settings//" + username + ".yml");
@@ -42,19 +45,9 @@ public class ResponseHandler{
 			return true;
 		}
 	}
+	
+	
+	
 
-	// Checks if it is the correct password.
-	public boolean checkUserPassword(String username, String password){
-		if(getUserPassword(username).equals(null)){
-			return false;
-		}else{
-			if(getUserPassword(username).equalsIgnoreCase(password)){
-				return true;
-			}else{
-				return false;
-			}
-		}
-
-	}
 
 }

@@ -19,7 +19,7 @@ public class CharacterSelectionScreen extends Screen implements Runnable{
     
     //Paints the screen
     public void paint(Graphics g){
-        g.clearRect(0, 0, this.getWidth(), this.getHeight());
+    	
     }
     
     //Runs the character selection screen
@@ -28,9 +28,6 @@ public class CharacterSelectionScreen extends Screen implements Runnable{
         loadGameData();
         loadBackground();
         loadImages();
-        while(engine.running){
-            repaint();
-        }
     }
 
     //Loads images to the screen

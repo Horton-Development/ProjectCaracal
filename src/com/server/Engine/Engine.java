@@ -10,13 +10,16 @@ public class Engine implements Runnable {
 	//Main server loop, waiting for input/requests and process with handlers
 
 	Thread thread = new Thread(this);
+	
 	public boolean running = false;
 	public int clientID;
+	
 	ConfigHandler configHandler = new ConfigHandler();
 	ResponseHandler responseHandler = new ResponseHandler();
 	ConnectionHandler connectionHandler = new ConnectionHandler();
 	StartupHandler startupHandler;
 	
+	//Constructor
 	public Engine(StartupHandler startupHandler){
 		this.startupHandler = startupHandler;
 		configHandler.createDefaultDirectory();
@@ -24,7 +27,7 @@ public class Engine implements Runnable {
 		thread.start();
 	}
 
-	
+	//Starts the server engine
 	public void run(){
 		connectionHandler.createConnection(startupHandler);
 	}

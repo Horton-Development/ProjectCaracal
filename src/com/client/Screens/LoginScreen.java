@@ -28,7 +28,7 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 	private static final long serialVersionUID = 1L;
 
 	Thread thread = new Thread(this);
-	
+
 	RequestHandler requestHandler = new RequestHandler(engine, this);
 	ConnectionHandler connectionHandler = new ConnectionHandler();
 
@@ -73,16 +73,16 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 
 	// Action Listener
 	public void actionPerformed(ActionEvent e){
-		
+
 		//If the action performed was the clicking of the button
 		if(e.getActionCommand().equals(button.getActionCommand())){
 			username = textField.getText();
 			password = passwordField.getPassword();
-			
+
 			//If they are connected to the server.
 			if(connectionHandler.connected){
 				try{
-					requestHandler.checkUserData(new Socket("72.231.199.200", 63450), username, password);
+					requestHandler.checkUserData(new Socket("localhost", 63450), username, password);
 				}catch(UnknownHostException e1){
 					e1.printStackTrace();
 				}catch(IOException e1){
@@ -93,7 +93,7 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 			}
 		}
 	}
-	
+
 	public void shutdown(){
 		this.dispose();
 	}
