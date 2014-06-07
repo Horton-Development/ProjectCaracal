@@ -1,8 +1,8 @@
 package com.server.Engine;
 
 import com.server.Handlers.ConfigHandler;
-import com.server.Handlers.ConnectionHandler;
 import com.server.Handlers.ResponseHandler;
+import com.server.Handlers.ServerConnectionHandler;
 import com.server.Handlers.StartupHandler;
 
 public class Engine implements Runnable {
@@ -16,8 +16,8 @@ public class Engine implements Runnable {
 	
 	ConfigHandler configHandler = new ConfigHandler();
 	ResponseHandler responseHandler = new ResponseHandler();
-	ConnectionHandler connectionHandler = new ConnectionHandler();
 	StartupHandler startupHandler;
+	ServerConnectionHandler connectionHandler = new ServerConnectionHandler(startupHandler);
 	
 	//Constructor
 	public Engine(StartupHandler startupHandler){
@@ -29,7 +29,7 @@ public class Engine implements Runnable {
 
 	//Starts the server engine
 	public void run(){
-		connectionHandler.createConnection(startupHandler);
+		connectionHandler.run();
 	}
 
 

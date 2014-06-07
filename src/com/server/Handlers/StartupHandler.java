@@ -2,7 +2,6 @@
 package com.server.Handlers;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,11 +17,11 @@ public class StartupHandler extends JFrame implements ActionListener{
     
 	private static final long serialVersionUID = 1L;
 	
-	ConnectionHandler connectionHandler = new ConnectionHandler();
+	ServerConnectionHandler connectionHandler = new ServerConnectionHandler(this);
 	ErrorHandler errorHandler = new ErrorHandler();
 	JButton startButton = new JButton("Start Server");
 	JButton stopButton = new JButton("Stop Server");
-	JTextArea textArea = new JTextArea();
+	static JTextArea textArea = new JTextArea();
 	
     boolean running = false;
     
@@ -48,7 +47,7 @@ public class StartupHandler extends JFrame implements ActionListener{
 		else if(e.getActionCommand().equalsIgnoreCase("Stop")){
 			startButton.setEnabled(true);
 			stopButton.setEnabled(false);
-			connectionHandler.endConnection(connectionHandler.serverSocket, connectionHandler.clientSocket);
+			connectionHandler.stop();
 		}
 	}
 	

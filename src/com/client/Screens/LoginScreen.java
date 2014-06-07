@@ -82,7 +82,7 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 			//If they are connected to the server.
 			if(connectionHandler.connected){
 				try{
-					requestHandler.checkUserData(new Socket("localhost", 63450), username, password);
+					requestHandler.checkUserData(new Socket("localhost", 63450), username, String.valueOf(password));
 				}catch(UnknownHostException e1){
 					e1.printStackTrace();
 				}catch(IOException e1){

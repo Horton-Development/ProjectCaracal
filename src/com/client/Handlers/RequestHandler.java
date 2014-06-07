@@ -21,10 +21,11 @@ public class RequestHandler implements Runnable{
 	private static BufferedReader bufferedReader;
 	
 
-	public boolean dataCorrect = false;
+	public boolean dataCorrect;
 	int interval = 0;
 	int times = 0;
 	long time = System.currentTimeMillis();
+	boolean running = true;
 	String inputline = null;
 	Thread thread = new Thread(this);
 	
@@ -39,16 +40,16 @@ public class RequestHandler implements Runnable{
 		this.loginScreen = loginScreen;
 	}
 	
-	public void checkUserData(Socket clientSocket, String username, char[] password){
-		if(username.isEmpty() || String.valueOf(password).isEmpty()){
+	public void checkUserData(Socket clientSocket, String username, String string){
+		if(username.isEmpty() || String.valueOf(string).isEmpty()){
 			
 		}else{
 			try{
 				printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
 				bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-				
 				printWriter.println("LOGIN");
-				sendCredentials(clientSocket, username, password);
+				sendCredentials(clientSocket, username, string);
+				running = true;
 				thread.start();
 			}catch(IOException e){
 				e.printStackTrace();
@@ -63,28 +64,23 @@ public class RequestHandler implements Runnable{
 		interval = 0;
 		System.out.println("Waiting for server response!");
 		try{
-			System.out.println(interval);
 			inputline = bufferedReader.readLine();
-			System.out.println(interval);
-			for(interval = 0; interval < 10; interval++){
+			while(running){
 				try{
 					if(inputline.equalsIgnoreCase("Valid")){
 						System.out.println("Valid");
 						loginScreen.shutdown();
 						new LoadScreen(engine);
-						interval = 11;
+						running = false;
 					}else if(inputline.equalsIgnoreCase("Invalid")){
 						System.out.println("Invalid");
-						System.exit(0);
-						interval = 11;
+						running = false;
 					}
 					thread.sleep(200);
 				}catch(InterruptedException e){
 					e.printStackTrace();
 					interval = 11;
-				}
-				
-					
+				}	
 			}
 		}catch(IOException ex){
 			
@@ -92,10 +88,11 @@ public class RequestHandler implements Runnable{
 		
 	}
 	
-	public void sendCredentials(Socket clientSocket, String username2, char[] password2){
+	public void sendCredentials(Socket clientSocket, String username2, String password){
 		try{
+			System.out.println(BCrypt.hashpw(password, BCrypt.gensalt()));
 			printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
-			printWriter.println(username2 + "~" + bCrypt.hashpw(String.valueOf(password2), bCrypt.gensalt()));
+			printWriter.println(username2 + "_" + BCrypt.hashpw(password, BCrypt.gensalt()));
 		}catch(IOException e){
 			e.printStackTrace();
 		}
