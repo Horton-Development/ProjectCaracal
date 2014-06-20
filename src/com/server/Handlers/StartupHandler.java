@@ -17,7 +17,7 @@ public class StartupHandler extends JFrame implements ActionListener{
     
 	private static final long serialVersionUID = 1L;
 	
-	ServerConnectionHandler connectionHandler = new ServerConnectionHandler(this);
+	ServerConnectionHandler connectionHandler = new ServerConnectionHandler();
 	ErrorHandler errorHandler = new ErrorHandler();
 	JButton startButton = new JButton("Start Server");
 	JButton stopButton = new JButton("Stop Server");

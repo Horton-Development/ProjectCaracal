@@ -17,7 +17,7 @@ public class Engine implements Runnable {
 	ConfigHandler configHandler = new ConfigHandler();
 	ResponseHandler responseHandler = new ResponseHandler();
 	StartupHandler startupHandler;
-	ServerConnectionHandler connectionHandler = new ServerConnectionHandler(startupHandler);
+	ServerConnectionHandler connectionHandler = new ServerConnectionHandler();
 	
 	//Constructor
 	public Engine(StartupHandler startupHandler){

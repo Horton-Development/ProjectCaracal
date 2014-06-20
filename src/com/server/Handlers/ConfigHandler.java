@@ -2,7 +2,10 @@ package com.server.Handlers;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.InvalidPathException;
+
+import com.client.Handlers.ConnectionHandler;
 
 public class ConfigHandler{
 
@@ -77,6 +80,23 @@ public class ConfigHandler{
 			try{
 				newFile.createNewFile();
 				System.out.println("Created new file " + fileName + ".yml");
+			}catch(IOException e){
+				System.out.println("Failed to create file " + fileName + ".yml" + " under the directory " + dir + ".");
+			}
+		}
+	}
+	
+	public void createNewAccountFile(String fileName, String dir, String text){
+		File directory = new File(dir);
+		File file = new File(dir + "//" + fileName + ".yml");
+		if(!directory.exists()){
+			createDirectory(dir);
+		}else{
+			try{
+				PrintWriter writer = new PrintWriter(file, "UTF-8");
+				writer.println("Password: " + text);
+				writer.close();
+				System.out.println("Created account file " + fileName + ".yml");
 			}catch(IOException e){
 				System.out.println("Failed to create file " + fileName + ".yml" + " under the directory " + dir + ".");
 			}

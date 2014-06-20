@@ -3,6 +3,7 @@ package com.client.Engine;
 import com.client.Handlers.ErrorHandler;
 import com.client.Handlers.ResourceLoadHandler;
 import com.client.Handlers.StateOutputHandler;
+import com.client.Screens.LoadScreen;
 import com.client.Screens.LoginScreen;
 
 public class Engine implements Runnable{
@@ -11,6 +12,7 @@ public class Engine implements Runnable{
 
 	public static int fps;
 	public boolean running;
+	LoginScreen loginScreen = new LoginScreen(this);
 
 	// Output handler
 	StateOutputHandler handler = new StateOutputHandler(this);
@@ -18,7 +20,7 @@ public class Engine implements Runnable{
 	// Constructor
 	public Engine(){
 		thread.start();
-		new LoginScreen(this);
+		new LoadScreen(this);
 		ResourceLoadHandler resourceLoadHandler = new ResourceLoadHandler();
 		resourceLoadHandler.loadFiles();
 	}
@@ -45,7 +47,7 @@ public class Engine implements Runnable{
 				lastFrame = System.currentTimeMillis();
 			}
 		}
-		
+
 	}
 
 }
