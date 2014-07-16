@@ -1,6 +1,7 @@
 package com.client.screens;
 
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Toolkit;
 
 import javax.swing.JButton;
@@ -36,6 +37,7 @@ public class MenuScreen extends Screen implements Runnable{
 	public void run(){
 		setSize();
 		setTitle();
+		setLayout();
 		setVisable(true);
 		running = true;
 		while(running){
@@ -59,9 +61,16 @@ public class MenuScreen extends Screen implements Runnable{
 		frame.setTitle("ProjectCaracal");
 	}
 
-	// Sets the screen visable
-	private void setVisable(boolean visable){
-		frame.setVisible(visable);
+	// Sets the screen visible
+	private void setVisable(boolean visible){
+		frame.setVisible(visible);
+	}
+	
+	private void setLayout(){
+		frame.setLayout(new FlowLayout());
+		frame.add(button1);
+		frame.add(button2);
+		frame.add(button3);
 	}
 
 }

@@ -33,7 +33,6 @@ public class ServerConnectionHandler implements Runnable{
 			serverSocket.close();
 			StartupHandler.textArea.append("(" + format.format(date) + ") Server Stopped!\n");
 		}catch(IOException e){
-			e.printStackTrace();
 		}
 
 	}

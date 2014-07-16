@@ -20,7 +20,7 @@ public class Engine implements Runnable{
 	// Constructor
 	public Engine(){
 		thread.start();
-		new LoadScreen(this);
+		new LoginScreen(this).start();
 		ResourceLoadHandler resourceLoadHandler = new ResourceLoadHandler();
 		resourceLoadHandler.loadFiles();
 	}

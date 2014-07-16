@@ -98,7 +98,7 @@ public class RequestHandler implements Runnable{
 					if(inputline.equalsIgnoreCase("Valid")){
 						running = false;
 						System.out.println("Valid");
-						loginScreen.shutdown();
+						new LoginScreen(engine).shutdown();
 						new LoadScreen(engine);
 					}else if(inputline.equalsIgnoreCase("Invalid")){
 						System.out.println("Invalid");

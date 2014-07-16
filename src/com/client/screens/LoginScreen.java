@@ -36,6 +36,8 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 	JLabel passwordLabel = new JLabel("Password:");
 	JLabel invalidLabel = new JLabel("Invalid Password!");
 	JPasswordField passwordField = new JPasswordField(8);
+	
+	public boolean connected;
 
 	public JButton button = new JButton("Login");
 	public JButton createAccount = new JButton("Create Account");
@@ -65,7 +67,7 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 		this.setResizable(false);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setVisible(true);
-		connectionHandler.connectToServer(this);
+		connectionHandler.connectToServer(this, engine);
 	}
 
 	// Adds parameters to the components
@@ -113,14 +115,15 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 		RequestHandler requestHandler = new RequestHandler(engine);
 		// If the action performed was the clicking of the button
 		if(e.getActionCommand().equals("Login")){
-
+			connected = true;
 			username = textField.getText();
 			password = passwordField.getPassword();
 
 			// If they are connected to the server.
-			if(connectionHandler.connected){
+			if(connected){
 				try{
 					requestHandler.checkUserData(new Socket("localhost", 63450), username, String.valueOf(password));
+					shutdown();
 				}catch(UnknownHostException e1){
 					e1.printStackTrace();
 				}catch(IOException e1){
@@ -134,7 +137,7 @@ public class LoginScreen extends Screen implements Runnable, ActionListener{
 			new CreateAccountScreen(engine).start();
 			shutdown();
 		}else if(e.getActionCommand().equals("Reconnect")){
-			connectionHandler.connectToServer(this);
+			connectionHandler.connectToServer(this, engine);
 		}
 	}
 
