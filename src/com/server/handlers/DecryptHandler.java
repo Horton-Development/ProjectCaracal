@@ -1,6 +1,6 @@
 package com.server.handlers;
 
-import com.common.utils.BCrypt;
+import com.client.utils.BCrypt;
 
 public class DecryptHandler{
 

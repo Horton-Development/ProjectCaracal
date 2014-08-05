@@ -8,14 +8,11 @@ import java.net.Socket;
 
 import javax.swing.JOptionPane;
 
-import com.client.engine.Engine;
-import com.client.screens.CreateAccountScreen;
-import com.client.screens.LoadScreen;
-import com.client.screens.LoginScreen;
-import com.common.utils.BCrypt;
-import com.server.handlers.ResponseHandler;
+import com.client.screens.Game;
+import com.client.screens.Main;
+import com.client.utils.BCrypt;
 
-public class RequestHandler implements Runnable{
+public class RequestHandler{
 
 	// Send a request to the server, use a header to tell the server what to do
 	// with the data
@@ -23,7 +20,7 @@ public class RequestHandler implements Runnable{
 	private static PrintWriter printWriter;
 	private static BufferedReader bufferedReader;
 
-	Engine engine;
+	Main main;
 
 	public boolean dataCorrect;
 
@@ -34,25 +31,16 @@ public class RequestHandler implements Runnable{
 
 	boolean running = true;
 
-	String inputline = null;
+	String inputline = "**";
 
-	Thread thread = new Thread(this);
 
-	ConnectionHandler connectionHandler = new ConnectionHandler();
-	ResponseHandler responseHandler = new ResponseHandler();
+	ConnectionHandler connectionHandler = new ConnectionHandler(main);
 	BCrypt bCrypt = new BCrypt();
-	LoginScreen loginScreen = new LoginScreen(engine);
-	CreateAccountScreen accountScreen = new CreateAccountScreen(engine);
-
-	// Constructor.
-	public RequestHandler(Engine engine){
-		this.engine = engine;
-	}
 
 	// Sends the data to the server to be validated.
 	public void checkUserData(Socket clientSocket, String username, String string){
 		if(username.isEmpty() || String.valueOf(string).isEmpty()){
-
+			JOptionPane.showMessageDialog(null, "Please input username and password fields.", "Error", JOptionPane.ERROR_MESSAGE);
 		}else{
 			try{
 				printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -60,7 +48,6 @@ public class RequestHandler implements Runnable{
 				printWriter.println("LOGIN");
 				running = true;
 				sendCredentials(clientSocket, username, string);
-				thread.start();
 			}catch(IOException e){
 				e.printStackTrace();
 			}
@@ -75,70 +62,70 @@ public class RequestHandler implements Runnable{
 		}else{
 			try{
 				printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
-				bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				printWriter.println("CREATE");
 				running = true;
-				sendAccountCreation(clientSocket, username, string);
-				thread.start();
+				try{
+					Thread.sleep(2000);
+					System.out.println(username + "_" + string);
+					printWriter.println(username + "_" + string);
+					run(clientSocket);
+				}catch(InterruptedException e){
+					e.printStackTrace();
+				}
+
 			}catch(IOException e){
 				e.printStackTrace();
 			}
 
 		}
 	}
+	
+	public void sendCredentials(Socket clientSocket, String username2, String password){
+		try{
+			System.out.println(username2 + "_" + BCrypt.hashpw(password, BCrypt.gensalt()));
+			printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
+			printWriter.println(username2 + "_" + BCrypt.hashpw(password, BCrypt.gensalt()));
+			run(clientSocket);
+		}catch(IOException e){
+			e.printStackTrace();
+		}
+
+	}
 
 	// Scans for a server response.
-	public void run(){
+	public void run(Socket clientSocket){
 		interval = 0;
 		System.out.println("Waiting for server response!");
 		try{
-			inputline = bufferedReader.readLine();
 			while(running){
+				bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+				inputline = bufferedReader.readLine();
 				try{
-					if(inputline.equalsIgnoreCase("Valid")){
-						running = false;
+					if(inputline.equals("**")){
+
+					}else if(inputline.equalsIgnoreCase("Valid")){
 						System.out.println("Valid");
-						new LoginScreen(engine).shutdown();
-						new LoadScreen(engine);
+						new Game();
+						running = false;
 					}else if(inputline.equalsIgnoreCase("Invalid")){
 						System.out.println("Invalid");
 						running = false;
 					}else if(inputline.equalsIgnoreCase("Success")){
-						JOptionPane.showMessageDialog(null, "Account Created!", "Server", JOptionPane.INFORMATION_MESSAGE);
+						Main.progressBar_1.setValue(100);
+						Main.progressBar_1.setString("Account Created!");
+						Main.btnNewButton.setEnabled(false);
 						running = false;
-						accountScreen.dispose();
-						loginScreen.start();
 					}
 					Thread.sleep(200);
 				}catch(InterruptedException e){
 					e.printStackTrace();
 				}
 			}
-		}catch(IOException ex){
-
+		}catch(IOException e1){
+			e1.printStackTrace();
 		}
+		
 
-	}
-
-	public void sendCredentials(Socket clientSocket, String username2, String password){
-		try{
-			System.out.println(username2 + "_" + BCrypt.hashpw(password, BCrypt.gensalt()));
-			printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
-			printWriter.println(username2 + "_" + BCrypt.hashpw(password, BCrypt.gensalt()));
-		}catch(IOException e){
-			e.printStackTrace();
-		}
-
-	}
-
-	public void sendAccountCreation(Socket clientSocket, String username2, String password){
-		try{
-			System.out.println(username2 + "_" + password);
-			printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
-			printWriter.println(username2 + "_" + password);
-		}catch(IOException e){
-			e.printStackTrace();
-		}
 	}
 
 }

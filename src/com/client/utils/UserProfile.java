@@ -1,4 +1,4 @@
-package com.common.utils;
+package com.client.utils;
 
 public class UserProfile{
 

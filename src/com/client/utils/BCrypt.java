@@ -1,4 +1,4 @@
-package com.common.utils;
+package com.client.utils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
